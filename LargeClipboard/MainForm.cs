@@ -29,16 +29,36 @@ namespace LargeClipboard
   		
   		IntPtr nextClipboardViewer;
   		
+  		// DLL libraries used to manage hotkeys
+		[DllImport("user32.dll")] 
+		public static extern bool RegisterHotKey(IntPtr hWnd, int id, int fsModifiers, int vlc);
+		
+		[DllImport("user32.dll")]
+		public static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+		
+        public const int ALT = 0x0001;
+        public const int CTRL = 0x0002;
+        public const int WM_HOTKEY_MSG_ID = 0x0312;
+
+		GlobalHotkey ghk;
+  		
 		public MainForm(Boolean open) {
 			InitializeComponent();
 			nextClipboardViewer = (IntPtr)SetClipboardViewer((int) this.Handle);
+			//RegisterHotKey(this.Handle, CLIPBOARD1_HOTKEY_ID, ALT_CONTROL, (int) Keys.V);
+			ghk = new Hotkeys.GlobalHotkey(Constants.ALT + Constants.SHIFT, Keys.V, this);
+
 		}
   		
+		void HandleHotkey() {
+			MessageBox.Show("Here");
+        }
+		
   		protected override void WndProc(ref System.Windows.Forms.Message m) {
 		  	// defined in winuser.h
 		  	const int WM_DRAWCLIPBOARD = 0x308;
 		  	const int WM_CHANGECBCHAIN = 0x030D;
-		 
+		 	
 		  	switch(m.Msg) {
 		    	case WM_DRAWCLIPBOARD:
 		      		DisplayClipboardData();
@@ -57,6 +77,8 @@ namespace LargeClipboard
 		      		base.WndProc(ref m);
 		    		break;
 		  	}
+
+		  	if (m.Msg == Hotkeys.Constants.WM_HOTKEY_MSG_ID) HandleHotkey();
 		}
   	
   		void DisplayClipboardData() {
