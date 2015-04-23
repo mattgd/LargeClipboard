@@ -34,6 +34,7 @@ namespace LargeClipboard
 				}
 			}
 			base.Dispose(disposing);
+			ChangeClipboardChain(this.Handle, nextClipboardViewer);
 		}
 		
 		/// <summary>
@@ -59,7 +60,7 @@ namespace LargeClipboard
 			this.fileToolStripMenuItem});
 			this.menuStrip.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip.Name = "menuStrip";
-			this.menuStrip.Size = new System.Drawing.Size(284, 24);
+			this.menuStrip.Size = new System.Drawing.Size(549, 24);
 			this.menuStrip.TabIndex = 0;
 			this.menuStrip.Text = "menuStrip";
 			// 
@@ -95,15 +96,15 @@ namespace LargeClipboard
 			// 
 			this.clipboard1.Location = new System.Drawing.Point(12, 27);
 			this.clipboard1.Name = "clipboard1";
-			this.clipboard1.Size = new System.Drawing.Size(260, 54);
+			this.clipboard1.Size = new System.Drawing.Size(260, 223);
 			this.clipboard1.TabIndex = 1;
 			this.clipboard1.Text = "";
 			// 
 			// clipboard2
 			// 
-			this.clipboard2.Location = new System.Drawing.Point(12, 87);
+			this.clipboard2.Location = new System.Drawing.Point(278, 27);
 			this.clipboard2.Name = "clipboard2";
-			this.clipboard2.Size = new System.Drawing.Size(260, 54);
+			this.clipboard2.Size = new System.Drawing.Size(260, 223);
 			this.clipboard2.TabIndex = 2;
 			this.clipboard2.Text = "";
 			// 
@@ -111,7 +112,7 @@ namespace LargeClipboard
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 262);
+			this.ClientSize = new System.Drawing.Size(549, 262);
 			this.Controls.Add(this.clipboard2);
 			this.Controls.Add(this.clipboard1);
 			this.Controls.Add(this.menuStrip);

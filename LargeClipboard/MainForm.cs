@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace LargeClipboard
@@ -13,24 +14,73 @@ namespace LargeClipboard
 	/// Description of MainForm.
 	/// </summary>
 	public partial class MainForm : Form {
-		public MainForm(Boolean open) {
-			//
-			// The InitializeComponent() call is required for Windows Forms designer support.
-			//
-			InitializeComponent();
-			
-			if (!open) new ClipboardMonitor();
-			//
-			// TODO: Add constructor code after the InitializeComponent() call.
-			//
-		}
 		
-		public static void setClipboardText(String text) {
-			if (clipboard1.Text == null) {
-				clipboard1.Text = text;
-			} else {
-				clipboard2.Text = text;
-			}
+		[DllImport("User32.dll")]
+  		protected static extern int SetClipboardViewer(int hWndNewViewer);
+  		
+  		[DllImport("User32.dll", CharSet=CharSet.Auto)]
+  		public static extern bool ChangeClipboardChain(IntPtr hWndRemove,
+  		                                               IntPtr hWndNewNext);
+  		
+  		[DllImport("user32.dll", CharSet=CharSet.Auto)]
+ 		public static extern int SendMessage(IntPtr hwnd, int wMsg, 
+  		                                     IntPtr wParam,
+  		                                     IntPtr lParam);
+  		
+  		IntPtr nextClipboardViewer;
+  		
+		public MainForm(Boolean open) {
+			InitializeComponent();
+			nextClipboardViewer = (IntPtr)SetClipboardViewer((int) this.Handle);
 		}
+  		
+  		protected override void WndProc(ref System.Windows.Forms.Message m) {
+		  	// defined in winuser.h
+		  	const int WM_DRAWCLIPBOARD = 0x308;
+		  	const int WM_CHANGECBCHAIN = 0x030D;
+		 
+		  	switch(m.Msg) {
+		    	case WM_DRAWCLIPBOARD:
+		      		DisplayClipboardData();
+		      		SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+		    		break;
+		 
+		    	case WM_CHANGECBCHAIN:
+		    		if (m.WParam == nextClipboardViewer) {
+		    			nextClipboardViewer = m.LParam;
+		    		} else {
+		    			SendMessage(nextClipboardViewer, m.Msg, m.WParam, m.LParam);
+		    		}
+		    		break;
+		 
+		    	default:
+		      		base.WndProc(ref m);
+		    		break;
+		  	}
+		}
+  	
+  		void DisplayClipboardData() {
+  			try {
+  				IDataObject iData = new DataObject();
+	  			iData = Clipboard.GetDataObject();
+	  			
+	  			RichTextBox clipboard;
+	  			if (clipboard1.Text == "") {
+	  				clipboard = clipboard1;
+	  			} else {
+	  				clipboard = clipboard2;
+	  			}
+	  			
+	  			if (iData.GetDataPresent(DataFormats.Rtf)) {
+	  				clipboard.Text = (string) iData.GetData(DataFormats.Rtf);
+	  			} else if (iData.GetDataPresent(DataFormats.Text)) {
+	  				clipboard.Text = (string) iData.GetData(DataFormats.Text);
+	  			} else {
+	  				clipboard.Text = "Invalid clipboard data.";
+	  			}
+  			} catch(Exception e) {
+  				MessageBox.Show(e.ToString());
+  			}
+  		}
 	}
 }
