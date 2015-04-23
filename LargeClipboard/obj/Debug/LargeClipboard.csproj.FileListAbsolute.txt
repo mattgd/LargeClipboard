@@ -1,0 +1,8 @@
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\bin\Debug\LargeClipboard.exe.config
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\bin\Debug\LargeClipboard.exe
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\bin\Debug\LargeClipboard.pdb
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\obj\Debug\LargeClipboard.csprojResolveAssemblyReference.cache
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\obj\Debug\LargeClipboard.MainForm.resources
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\obj\Debug\LargeClipboard.csproj.GenerateResource.Cache
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\obj\Debug\LargeClipboard.exe
+E:\SharpDevelop Projects\LargeClipboard\LargeClipboard\obj\Debug\LargeClipboard.pdb
